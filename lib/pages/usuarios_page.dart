@@ -1,4 +1,6 @@
+import 'package:chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -14,24 +16,29 @@ class UsuariosPage extends StatefulWidget {
 class _UsuariosPageState extends State<UsuariosPage> {
 
   final usuarios = [
-    Usuario(uid: '1', nombre: 'Omar', email: 'test1@test.com', online: true),
-    Usuario(uid: '2', nombre: 'Alonso', email: 'test2@test.com', online: true),
-    Usuario(uid: '3', nombre: 'Raul', email: 'test3@test.com', online: false),
-    Usuario(uid: '4', nombre: 'Flor', email: 'test4@test.com', online: true),
-    Usuario(uid: '5', nombre: 'Valeria', email: 'test5@test.com', online: false),
+    Usuario(uid: '1', name: 'Omar', email: 'test1@test.com', online: true),
+    Usuario(uid: '2', name: 'Alonso', email: 'test2@test.com', online: true),
+    Usuario(uid: '3', name: 'Raul', email: 'test3@test.com', online: false),
+    Usuario(uid: '4', name: 'Flor', email: 'test4@test.com', online: true),
+    Usuario(uid: '5', name: 'Valeria', email: 'test5@test.com', online: false),
   ];
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>( context );
+    final usuario = authService.usuario;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi nombre', style: TextStyle(color: Colors.black87),),
+        title: Text(usuario.name, style: TextStyle(color: Colors.black87),),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon( Icons.exit_to_app, color: Colors.black87, ),
-          onPressed: () => {},
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, 'login');
+            authService.logout();            
+          },
         ),
         actions: [
           Container(
@@ -64,10 +71,10 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   ListTile _usuarioListTile( Usuario usuario) {
     return ListTile(
-      title: Text(usuario.nombre ),
+      title: Text(usuario.name ),
       subtitle: Text(usuario.email ),
       leading: CircleAvatar(
-        child: Text(usuario.nombre.substring(0, 2)),
+        child: Text(usuario.name.substring(0, 2)),
         backgroundColor: Colors.blue[100],
       ),
       trailing: Container(
