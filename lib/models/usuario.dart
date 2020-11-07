@@ -19,7 +19,7 @@ class Usuario {
 
     factory Usuario.fromJson(Map<String, dynamic> json) => Usuario(
         online: json["online"],
-        name: json["name"],
+        name: json.containsKey('name') ? json["name"] : json["nombre"],
         email: json["email"],
         uid: json["uid"],
     );
